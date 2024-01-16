@@ -88,7 +88,6 @@ if(NOT glm_POPULATED)
     add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
 endif()
 
-
 # GSL dependency
 FetchContent_Declare(
         gsl
@@ -114,12 +113,26 @@ if(NOT fmt_POPULATED)
     add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
 endif()
 
+# Magic Enum dependency
+FetchContent_Declare(
+        menum
+        GIT_REPOSITORY https://github.com/Neargye/magic_enum.git
+        GIT_TAG v0.9.3
+        OVERRIDE_FIND_PACKAGE
+)
+FetchContent_GetProperties(menum)
+if(NOT menum_POPULATED)
+    FetchContent_Populate(menum)
+    add_subdirectory(${menum_SOURCE_DIR} ${menum_BINARY_DIR})
+endif()
+
+
 # EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_SPARSE_PAGE = 2048)
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
 # Link the dependencies to the target
-target_link_libraries(${PROJECT_NAME} PUBLIC minhook libhat EnTT glm GSL fmt nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PUBLIC minhook libhat EnTT glm GSL fmt nlohmann_json magic_enum)
 
 # Copy Amethyst's Headers to AmethystFolder/include
 foreach(HEADER ${HEADERS})
