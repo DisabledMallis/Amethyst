@@ -3,7 +3,7 @@ project(AmethystAPI)
 
 # Amethyst folder location
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
 
 # C++ Compile Options
 set(CMAKE_CXX_STANDARD 20)
@@ -18,6 +18,8 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
 
 # Use proper runtime library
 set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+# Fix STL structures on debug mode
+add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
 
 # Amethyst Dependencies
 include(FetchContent)
@@ -89,10 +91,6 @@ FetchContent_Declare(
         OVERRIDE_FIND_PACKAGE
 )
 
-# Download each dependency
-FetchContent_MakeAvailable(fmt gsl glm json entt libhat minhook)
-
-
 # Magic Enum dependency
 FetchContent_Declare(
         menum
@@ -100,12 +98,9 @@ FetchContent_Declare(
         GIT_TAG v0.9.3
         OVERRIDE_FIND_PACKAGE
 )
-FetchContent_GetProperties(menum)
-if(NOT menum_POPULATED)
-    FetchContent_Populate(menum)
-    add_subdirectory(${menum_SOURCE_DIR} ${menum_BINARY_DIR})
-endif()
 
+# Download each dependency
+FetchContent_MakeAvailable(fmt gsl glm json entt libhat minhook menum)
 
 # EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE = 128)
