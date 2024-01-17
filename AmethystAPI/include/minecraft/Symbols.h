@@ -12,8 +12,16 @@ constexpr size_t const_hash(char const *input) {
 //Hashes the enum name so that way if the order of the enums change, they will always have the same value
 #define HASHED_ENTRY(entry) entry = const_hash(#entry)
 
-struct Symbols
+namespace Symbols
 {
+    enum struct Kind
+    {
+        VirtualOffset,
+        MemberOffset,
+        MemberFunction,
+        GlobalFunction
+    };
+
     enum struct VirtualOffsets : size_t
     {
         HASHED_ENTRY(ClientInstance_getLocalPlayer),
