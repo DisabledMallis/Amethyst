@@ -88,7 +88,10 @@ FetchContent_Declare(
         GIT_TAG 10.1.1
         OVERRIDE_FIND_PACKAGE
 )
-FetchContent_MakeAvailable(fmt)
+
+# Download each dependency
+FetchContent_MakeAvailable(fmt gsl glm json entt libhat minhook)
+
 
 # Magic Enum dependency
 FetchContent_Declare(
